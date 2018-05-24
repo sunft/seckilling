@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="MySQL - mysql@localhost" uuid="36175341-7a9f-4c68-ad3b-48d9aa35c25e">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>mysql.*</schema-pattern>
+      <default-schemas>mysql.*</default-schemas>
+    </data-source>
+    <data-source name="MySQL - seckilling@localhost" uuid="792b8d33-6f58-4c3b-b6c3-fc9cf3ea5193">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>seckilling.*</schema-pattern>
+      <default-schemas>seckilling.*</default-schemas>
+    </data-source>
+  </component>
+</project>
