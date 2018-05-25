@@ -2,6 +2,7 @@ package com.sunft.controller;
 
 import com.sunft.domain.User;
 import com.sunft.redis.RedisService;
+import com.sunft.redis.UserKey;
 import com.sunft.result.CodeMsg;
 import com.sunft.result.Result;
 import com.sunft.service.UserService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -64,11 +66,29 @@ public class DemoController {
         return Result.success(true);
     }
 
-    @GetMapping("/redis/get")
+    /**
+     * 测试从redis从获取值
+     * @return
+     */
+    @RequestMapping("/redis/get")
     @ResponseBody
     public Result<User> redisGet() {
-        User user = userService.getById(1);
+        User user = redisService.get(UserKey.getById,"1", User.class);
         return Result.success(user);
+    }
+
+    /**
+     * 测试从redis从获取值
+     * @return
+     */
+    @RequestMapping("/redis/set")
+    @ResponseBody
+    public Result<Boolean> redisSet() {
+        User user = new User();
+        user.setId(1);
+        user.setName("Bruce Lee");
+        redisService.set(UserKey.getById, "1", user);//UserKey:id1
+        return Result.success(true);
     }
 
 }

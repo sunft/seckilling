@@ -22,24 +22,20 @@ public class RedisService {
     private JedisPool jedisPool;
 
     /**
-     * 注入RedisConfig
-     */
-    @Autowired
-    private RedisConfig redisConfig;
-
-    /**
-     * 根据key读取数据
+     * 根据key读取数据,获取单个对象
+     * @param prefix 前缀
      * @param key 键
      * @param clazz 类类型
-     * @param <T>
-     * @return
+     * @return 值
      */
-    public <T> T get(String key, Class<T> clazz) {
+    public <T> T get(KeyPrefix prefix, String key, Class<T> clazz) {
         Jedis jedis = null;
 
         try{
             jedis = jedisPool.getResource();
-            String str = jedis.get(key);
+            //生成真正的key
+            String realKey = prefix.getPrefix() + key;
+            String str = jedis.get(realKey);
             T t = FastJsonUtils.stringToBean(str, clazz);
             return t;
         } finally {
@@ -54,14 +50,81 @@ public class RedisService {
      * @param <T>
      * @return
      */
-    public <T> boolean set(String key, T value) {
+    public <T> boolean set(KeyPrefix prefix, String key, T value) {
         Jedis jedis = null;
 
         try{
             jedis = jedisPool.getResource();
             String str = FastJsonUtils.beanToString(value);
-            jedis.set(key, str);
+            //生成真正的key
+            String realKey = prefix.getPrefix() + key;
+            int expireSeconds = prefix.expireSeconds();//获取过期时间
+
+            if(expireSeconds <= 0) {
+                jedis.set(realKey, str);
+            } else {
+                //设置过期时间和其他信息
+                jedis.setex(realKey, expireSeconds, str);
+            }
+
             return true;
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     * 判断key是否存在
+     * @param prefix 前缀
+     * @param key 键
+     * @return key存在,返回true;key不存在,返回false
+     */
+    public <T> boolean exists(KeyPrefix prefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            //生成真正的key
+            String realKey = prefix.getPrefix() + key;
+            return jedis.exists(key);
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     * 增加值,如果值是数值,加一后返回
+     * @param prefix 前缀
+     * @param key 键
+     * @return
+     */
+    public <T> Long incr(KeyPrefix prefix, String key) {
+        Jedis jedis = null;
+
+        try {
+            jedis = jedisPool.getResource();
+            //生成真正的key
+            String realKey = prefix.getPrefix() + key;
+            return jedis.incr(realKey);
+        } finally {
+            returnToPool(jedis);
+        }
+
+    }
+
+    /**
+     * 减少值,如果值是数值,减一后返回
+     * @param prefix 前缀
+     * @param key 键
+     * @return
+     */
+    public <T> Long decr(KeyPrefix prefix, String key) {
+        Jedis jedis = null;
+
+        try {
+            jedis = jedisPool.getResource();
+            //生成真正的key
+            String realKey = prefix.getPrefix() + key;
+            return jedis.decr(realKey);
         } finally {
             returnToPool(jedis);
         }
@@ -77,16 +140,5 @@ public class RedisService {
         }
     }
 
-    @Bean
-    public JedisPool JedisPoolFactory() {
-        JedisPoolConfig poolConfig = new JedisPoolConfig();
-        poolConfig.setMaxIdle(redisConfig.getPoolMaxIdle());
-        poolConfig.setMaxTotal(redisConfig.getPoolMaxTotal());
-        poolConfig.setMaxWaitMillis(redisConfig.getPoolMaxWait() * 1000);
-        //0代表连接第一个数据库
-        JedisPool jp = new JedisPool(poolConfig, redisConfig.getHost(), redisConfig.getPort(),
-                redisConfig.getTimeout() * 1000, redisConfig.getPassword(), 0);
-        return jp;
-    }
 
 }

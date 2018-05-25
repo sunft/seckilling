@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by sunft on 2018/5/24.
  * FastJson工具类
  */
-public class FastJsonUtils {
+public final class FastJsonUtils {
 
     private static final SerializeConfig config;
 
@@ -52,9 +52,8 @@ public class FastJsonUtils {
     /**
      * 将String装换成对应的Class对象
      *
-     * @param str
-     * @param clazz
-     * @param <T>
+     * @param str 被转换的字符串
+     * @param clazz 要转成的类类型
      * @return
      */
     @SuppressWarnings("unchecked")
