@@ -379,6 +379,17 @@
     </database-info>
     <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
     <schema name="" catalog="seckilling"/>
+    <table name="seckilling_user" schema="" catalog="seckilling" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" remarks="55So5oi3SUQs5omL5py65Y+356CB"/>
+      <column name="nickname" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12" remarks="55So5oi35pi156ew"/>
+      <column name="password" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12" remarks="TUQ1KE1ENShwYXNz5piO5paHK+WbuuWumnNhbHQpICsgc2FsdCk="/>
+      <column name="salt" sqlType="VARCHAR" precision="10" scale="0" nullable="true" jdbcType="12"/>
+      <column name="head" sqlType="VARCHAR" precision="128" scale="0" nullable="true" jdbcType="12" remarks="5aS05YOP77yM5LqR5a2Y5YKo55qESUQ="/>
+      <column name="register_date" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5rOo5YaM5pe26Ze0"/>
+      <column name="last_login_date" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93" remarks="5LiK5qyh55m75b2V5pe26Ze0"/>
+      <column name="login_count" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MA==" remarks="55m75b2V5qyh5pWw"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
     <table name="user" schema="" catalog="seckilling" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="name" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
